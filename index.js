@@ -1,6 +1,8 @@
 /*
 
+git remote set-url origin https://goldenstateofmind@github.com/goldenstateofmind/abv.git
 
+git config user.name "goldenstateofmind"; git config user.email "stateofgoldenmind@gmail.com"; git config github.user "goldenstateofmind"
 
 */
 
@@ -146,25 +148,6 @@ function update(sourceHierarchy) {
       return ''
     })
 
-  nodeEnter.attr('y', d => {
-    if (d.children) {
-      // return 2 * 1.2 * A.treeFontSize * d.parent.children.indexOf(d)
-      // return -12
-      // return 12
-    }
-    // return -1 * 1.2 * A.treeFontSize
-    // console.log(d3.select(this).node())
-    // return this.node.getBoundingClientRect().height / 2;
-  })
-
-  d3.selectAll('.svg-fo-label.leaf div.node-text')
-    .nodes()
-    .forEach(x => {
-      // debugger;
-      // console.log(x.getBoundingClientRect())
-      // x.parentNode.style.y = x.getBoundingClientRect().height / -2
-    })
-
   // UPDATE
   var nodeUpdate = nodeEnter.merge(node)
 
@@ -178,9 +161,6 @@ function update(sourceHierarchy) {
   nodeUpdate
     .select('circle.node')
     .attr('r', 5)
-    /*.style('fill', function(d) {
-      return d._children ? 'lightsteelblue' : '#fff'
-    })*/
     .attr('cursor', 'pointer')
     .attr('class', d => {
       var classes = ['node']
@@ -216,29 +196,6 @@ function update(sourceHierarchy) {
   // On exit reduce the opacity of text labels
   nodeExit.select('text').style('fill-opacity', 1e-6)
 
-  // jmk
-  /*nodeEnter
-    .on('mouseover', function(d) {
-      var filtered = nodeEnter.filter(e => d.ancestors().indexOf(e) > -1)
-      // console.log('d', d.data.name)
-      console.log('filtered', filtered)
-      // filtered Selection {_groups: Array(1), _parents: Array(1)}
-      filtered.selectAll('.node-text, circle').classed('highlight', true)
-
-      linkEnter.attr('class', function(link_d) {
-        var srcIdx = d.ancestors().indexOf(link_d.source)
-        var tarIdx = d.ancestors().indexOf(link_d.target)
-        if (srcIdx > -1 && tarIdx > -1) {
-          return 'highlight'
-        }
-        return ''
-      })
-    })
-    .on('mouseout', function(d) {
-      var filtered = node.filter(e => d.ancestors().indexOf(e) > -1)
-      filtered.selectAll('.node-text, circle').classed('highlight', false)
-    })*/
-
   // ****************** links section ***************************
 
   // Update the links...
@@ -261,10 +218,7 @@ function update(sourceHierarchy) {
   linkUpdate
     .transition()
     .duration(duration)
-    // .on('end', offsetAndNarrowPaths)
-    .attr('d', function(d) {
-      return diagonal(d, d.parent)
-    })
+    .attr('d', d => diagonal(d, d.parent))
     .end()
     .then(() => {
       clonePaths()
@@ -296,33 +250,24 @@ function update(sourceHierarchy) {
   var circles = d3.selectAll('circle.match')
   // nodeUpdate
   // nodeEnter
-  circles
-    // .on('mouseover', function(d) {
-    .classed('highlight', function(d) {
-      var filtered = nodesSelection.filter(e => d.ancestors().indexOf(e) > -1)
-      filtered
-        .selectAll('g.node, .node-text, circle')
-        .classed('highlight', true)
+  circles.classed('highlight', function(d) {
+    var filtered = nodesSelection.filter(e => d.ancestors().indexOf(e) > -1)
+    filtered.selectAll('g.node, .node-text, circle').classed('highlight', true)
 
-      // d3.selectAll('path').classed('highlight', function(link_d) {
-      d3.selectAll('g.node, path').classed('highlight', function(link_d) {
-        if (d3.select(this).classed('highlight')) {
-          return true
-        }
-        var srcIdx = d.ancestors().indexOf(link_d.parent)
-        var tarIdx = d.ancestors().indexOf(link_d)
+    // d3.selectAll('path').classed('highlight', function(link_d) {
+    d3.selectAll('g.node, path').classed('highlight', function(link_d) {
+      if (d3.select(this).classed('highlight')) {
+        return true
+      }
+      var srcIdx = d.ancestors().indexOf(link_d.parent)
+      var tarIdx = d.ancestors().indexOf(link_d)
 
-        if (srcIdx > -1 && tarIdx > -1) {
-          return true
-        }
-        // return false
-      })
-      return true
+      if (srcIdx > -1 && tarIdx > -1) {
+        return true
+      }
     })
-  /*.on('mouseout', function(d) {
-      var filtered = circles.filter(e => d.ancestors().indexOf(e) > -1)
-      filtered.selectAll('.node-text, circle').classed('highlight', false)
-    })*/
+    return true
+  })
 
   // Creates a curved (diagonal) path from parent to the child nodes
   function diagonal(s, d) {
@@ -364,42 +309,6 @@ function collapse(d) {
   }
 }
 
-// find(rootNode, 'Martinez')
-function find(d, name) {
-  console.log(d)
-  if (d.data.name == name) {
-    while (d.parent) {
-      d = d.parent
-      click(d) //if found open its parent
-    }
-    return
-  }
-
-  //recursively call find function on its children
-  if (d.children) {
-    d.children.forEach(function(d) {
-      find(d, name)
-    })
-  } else if (d._children) {
-    d._children.forEach(function(d) {
-      find(d, name)
-    })
-  }
-}
-
-function copyNodeData(obj, selectorText, objKey, writeKey, writeValue) {
-  // copyNodeData(A.treeData2, 'g.node.highlight', 'uid', 'on-match-path', 'on-match-path')
-  // document.querySelectorAll('g.node.highlight')
-  ;[...document.querySelectorAll(selectorText)].forEach(x => {
-    // console.log(x)
-    // console.log(x.__data__)
-    var uid = x.__data__.data.uid
-    if (uid) {
-      writeValueWhereKey(obj, objKey, uid, writeKey, writeValue)
-    }
-  })
-}
-
 // yes
 var textParents = d3
   .selectAll('text')
@@ -409,7 +318,6 @@ var textParents = d3
     console.log(dp)
     console.log(d3.select(dp).datum().data)
     d3.select(dp).attr('stroke', 'red')
-    //debugger
   })
 
 function clonePaths() {
@@ -429,10 +337,6 @@ function clonePaths() {
   uniqueLabelValues.forEach(x => {
     classifyPathsBelowX(x)
   })
-
-  /*
-  ["gn", "rw", "amar", "sv", "cocchi", "bit", "ss", "gc", "bene", "tripsc", "mali", "lemj", "limj", "soda", "abs", "cog", "peych"]
-  */
 }
 
 function processTextlessNodes() {
@@ -488,34 +392,6 @@ function classifyPathsBelowX(x) {
   })
 }
 
-// function classifyPathsAboveX(queryText, className) {
-//   // Select all the elements which match
-//   var matchingNodes = d3
-//     .selectAll('foreignObject.svg-fo-label:not(.leaf)')
-//     .nodes()
-
-//   matchingNodes = matchingNodes.filter(y => {
-//     var innerText = y.querySelector('div.node-text').innerText
-//     return queryText === innerText
-//   })
-
-//   var nodesSelection = d3.selectAll('.node') // 146
-
-//   d3.selectAll(matchingNodes).attr('test', function(d) {
-//     d3.selectAll('path').classed('test', function(link_d) {
-//       if (
-//         d.ancestors().includes(link_d) &&
-//         d.ancestors().includes(link_d.parent)
-//       ) {
-//         console.log(this)
-//         console.log(link_d)
-//         clone.dataset['ingred'] = A.revlut[x] || 'none'
-//         this.classList.add(className)
-//       }
-//     })
-//   })
-// }
-
 function createControls() {
   d3.select('body')
     .append('div')
@@ -527,8 +403,6 @@ function createControls() {
     .attr('max', 1.0)
     .attr('step', 0.1)
     .on('input', function() {
-      // var hex = Math.round(+this.value * 255).toString(16)
-      // document.querySelectorAll('.leaf div').forEach(x => (x.style.color = +this.value))
       document.querySelectorAll('.node-text').forEach(x => {
         x.style.opacity = +this.value
       })
@@ -562,58 +436,6 @@ function createLegend() {
       var name = d[0]
       return PROD ? A.lut[name] : name
     })
-
-  /*Object.entries(A.ingrds).forEach(e => {
-    var c = e[1].color
-    name = PROD ? A.lut[e[0]] : e[0]
-  */
-
-  // http://zevross.com/blog/2019/08/20/load-external-svgs-with-d3-v5/#one-of-multiple
-  /*d3.xml('./assets/bttle_jmk4.svg').then(data => {
-    d3.selectAll('.legend-item')
-      .nodes()
-      .forEach((n, ni) => {
-        var itemObj = d3.select(n).data()[0]
-        var name = itemObj[0]
-        var color = itemObj[1].color
-
-        d3.select(data)
-          .select('path#bottle')
-          //.attr('class', name)
-          .attr('stroke', '#444')
-          .attr('stroke-width', 3)
-          .attr('fill', color)
-
-        n.append(data.documentElement.cloneNode(true))
-        d3.select(n)
-          .select('svg')
-          .attr('class', 'position-absolute')
-
-        d3.select(n)
-          .append('div')
-          .attr('class', 'btl-label vertical-text position-absolute')
-          .html(PROD ? A.lut[name] : name)
-      })
-  })*/
-
-  // v4 https://bl.ocks.org/mbostock/1014829
-  /*d3.xml('./assets/bttle-dark-red-test.svg')
-      .mimeType('image/svg+xml')
-      .get(function(error, xml) {
-        if (error) throw error
-        // document.body.appendChild(xml.documentElement)
-        document.querySelector('#legend').appendChild(xml.documentElement)
-      })*/
-
-  /*d3.xml('./assets/bttle-dark-red-test.svg', 'image/svg+xml', function(xml) {
-      var importedNode = document.importNode(xml.documentElement, true)
-      d3.select('div#legend').each(function() {
-        this.appendChild(importedNode)
-      })
-      // inside of our d3.xml callback, call another function
-      // that styles individual paths inside of our imported svg
-      // styleImportedSVG()
-    })*/
 }
 
 createLegend()
@@ -715,62 +537,6 @@ function offsetAndNarrowPaths() {
   })
 }
 
-// function testConnectNodes(one, two) {
-//   function diagonalYX(s, d) {
-//     path = `M ${s.y} ${s.x}
-//           C ${(s.y + d.y) / 2} ${s.x},
-//             ${(s.y + d.y) / 2} ${d.x},
-//             ${d.y} ${d.x}`
-
-//     return path
-//   }
-
-//   function diagonalXY(s, d) {
-//     path = `M ${s.x} ${s.y}
-//           C ${(s.x + d.x) / 2} ${s.y},
-//             ${(s.x + d.x) / 2} ${d.y},
-//             ${d.x} ${d.y}`
-
-//     return path
-//   }
-
-//   function getCirclePosition(circleElemId) {
-//     var elem = document.querySelector(circleElemId)
-//     var svg = elem.ownerSVGElement
-
-//     // Get the cx and cy coordinates
-//     var pt = svg.createSVGPoint()
-//     pt.x = elem.cx.baseVal.value
-//     pt.y = elem.cy.baseVal.value
-
-//     while (true) {
-//       // Get this elements transform
-//       var transform = elem.transform.baseVal.consolidate()
-//       // If it has a transform, then apply it to our point
-//       if (transform) {
-//         var matrix = elem.transform.baseVal.consolidate().matrix
-//         pt = pt.matrixTransform(matrix)
-//       }
-//       // If this element's parent is the root SVG element, then stop
-//       if (elem.parentNode == svg) break
-//       // Otherwise step up to the parent element and repeat the process
-//       elem = elem.parentNode
-//     }
-//     return pt
-//   }
-
-//   var pos1 = getCirclePosition('.node.cog circle')
-//   var pos2 = getCirclePosition('.node.amar circle')
-
-//   d3.select('svg')
-//     .append('path')
-//     .attr('id', 'wtf')
-//     .style('fill', 'none')
-//     .style('stroke', '#2af')
-//     .style('stroke-width', 3)
-//     .attr('d', diagonalXY(pos1, pos2))
-// }
-
 // Keep below
 
 function diagonalYX(s, d) {
@@ -791,34 +557,7 @@ function diagonalXY(s, d) {
   return path
 }
 
-// function getCirclePosition(circleElemSelector) {
-//   var elem = document.querySelector(circleElemSelector)
-//   var svg = elem.ownerSVGElement
-
-//   // Get the cx and cy coordinates
-//   var pt = svg.createSVGPoint()
-//   pt.x = elem.cx.baseVal.value
-//   pt.y = elem.cy.baseVal.value
-
-//   while (true) {
-//     // Get this elements transform
-//     var transform = elem.transform.baseVal.consolidate()
-//     // If it has a transform, then apply it to our point
-//     if (transform) {
-//       var matrix = elem.transform.baseVal.consolidate().matrix
-//       pt = pt.matrixTransform(matrix)
-//     }
-//     // If this element's parent is the root SVG element, then stop
-//     if (elem.parentNode == svg) break
-//     // Otherwise step up to the parent element and repeat the process
-//     elem = elem.parentNode
-//   }
-//   return pt
-// }
-
 function getCirclePosition(element) {
-  console.log(element)
-  // var elem = document.querySelector(circleElemSelector)
   var svg = element.ownerSVGElement
 
   // Get the cx and cy coordinates
