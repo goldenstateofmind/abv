@@ -9,14 +9,21 @@ var PROD = true
 A.lut = {
   gn: 'gin',
   rw: 'rye whiskey',
+  bw: 'bourbon whiskey',
   bit: 'bitters',
   amar: 'amaro',
+  aperol: 'aperol',
   peych: "Peychaud's bitters",
   cog: 'cognac',
   abs: 'absinthe',
   soda: 'soda water',
-  limj: 'lime juice',
   lemj: 'lemon juice',
+  limj: 'lime juice',
+  cherry: 'cherry',
+  lem: 'lemon',
+  lim: 'lime',
+  orange: 'orange',
+  olive: 'olive',
   tripsc: 'triple sec',
   mali: 'maraschino liqueur',
   bene: 'Bénédictine',
@@ -52,6 +59,8 @@ A.lut = {
   ton: 'tonic',
 }
 
+// And the one sugar cube = 1 tsp sugar = ~ 1/4 oz simple syrup (1:1) is about right.Dec 20, 2009
+
 A.ingrds = {
   // spirit
   rw: { color: '#dc7a13', type: 'spirit' },
@@ -86,7 +95,7 @@ A.drnkNmIngr = [
   {
     name: 'Long Island Iced Tea',
     ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'vod-|-ss-|-tripsc-lemj-|' },
-    ingredients: ['vod', 'ss', 'tripsc', 'lemj'],
+    ingredientList: ['vod', 'ss', 'tripsc', 'lemj'],
     // 1.5 cl Tequila
     // 1.5 cl Vodka
     // 1.5 cl White rum
@@ -95,26 +104,67 @@ A.drnkNmIngr = [
     // 2.5 cl Lemon juice
     // 3.0 cl Gomme Syrup
     // 1 dash of Coke
+    /* 
+    "Tattoo": "Ship."
+    "Tattoo": "Done Is Better."
+    */
+  },
+  {
+    name: 'Blvdr',
+    ingredientList: [{ spirit: 'rw' }, { bit: 'amar' }, { sweet: 'sv' }],
+    ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'rw-amar-sv' },
+    ingredientAmounts: [
+      { ingred: 'rw', amt: 1, units: 'oz' },
+      { ingred: 'amar', amt: 1, units: 'oz' },
+      { ingred: 'sv', amt: 1, units: 'oz' },
+    ],
+    directions: [
+      { a: 'Stir with', b: 'ice' },
+      { a: 'Strain to', b: 'chilled', c: 'coupe or rocks glass' },
+      { note: 'Garnish with', garnish: 'orange', amt: '', units: 'twist' },
+    ],
   },
   {
     name: 'Paper Plane',
-    ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'rw-amaro-|-|-|-lemj' },
-    ingredients: ['rw', 'amaro', 'lemj'],
+    ingredientList: ['rw', 'amaro', 'lemj'],
+    ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'rw-amar-|-|-|-lemj' },
+    ingredientAmounts: [
+      { ingred: 'bw', amt: 0.75, units: 'oz' },
+      { ingred: 'amar', amt: 0.75, units: 'oz' },
+      { ingred: 'aperol', amt: 0.75, units: 'oz' },
+      { ingred: 'lemj', amt: 0.5, units: 'oz' },
+    ],
+    directions: [
+      { a: 'Shake with', b: 'ice' },
+      { a: 'Strain to', b: 'chilled', c: 'coupe' },
+      { note: 'Garnish with', garnish: 'lemon', amt: '', units: 'twist' },
+    ],
   },
   {
     name: 'Death in the Afternoon',
     ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'abs-pros' },
-    ingredients: ['abs', 'pros'],
+    ingredientList: ['abs', 'pros'],
   },
   {
     name: 'Sazerac',
     ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'cog-abs-ss-peych' },
-    ingredients: ['cog', 'abs', 'ss', 'peych'],
+    ingredientList: ['cog', 'abs', 'ss', 'peych'],
+    ingredientAmounts: [
+      { ingred: 'cog', amt: 2, units: 'oz' }, // or rw!
+      { ingred: 'abs', amt: 1, units: 'coat' },
+      { ingred: 'ss', amt: 0.25, units: 'oz' },
+      { ingred: 'peych', amt: 4, units: 'dashes' },
+    ],
+    directions: [
+      { a: 'Coat', b: 'chilled', vessel: 'rocks glass', d: 'with absinthe' },
+      { a: 'Stir and strain' },
+      { note: 'Express oils of', garnish: 'lemon', amt: '', units: 'twist' },
+    ],
   },
   {
     name: 'Gin & Tonic',
     ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'gn-ton' },
-    ingredients: ['gn', 'ton'],
+    ingredientList: ['gn', 'ton'],
   },
   {
     name: 'Whiskey Soda',
@@ -124,32 +174,58 @@ A.drnkNmIngr = [
         '-'
       ),
     },
-    ingredients: ['rw', 'soda'],
+    ingredientList: ['rw', 'soda'],
   },
   {
     name: 'Ng',
-    ingredients: [{ spirit: 'gn' }, { bit: 'amar' }, { sweet: 'sv' }],
+    ingredientList: [{ spirit: 'gn' }, { bit: 'amar' }, { sweet: 'sv' }],
     ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'gn-amar-sv' },
+    ingredientAmounts: [
+      { ingred: 'gn', amt: 1, units: 'oz' },
+      { ingred: 'amar', amt: 1, units: 'oz' },
+      { ingred: 'sv', amt: 1, units: 'oz' },
+    ],
+    directions: [
+      { a: 'Stir with', b: 'ice' },
+      { a: 'Strain to', c: 'coupe or rocks glass' },
+      { note: 'Garnish with', garnish: 'orange', amt: '', units: 'twist' },
+    ],
   },
   {
     name: 'Mtz',
-    ingredients: [
-      { spirit: 'gn' },
-      { bit: 'bit' },
-      { sweet: 'sv' },
-      { fl: 'ml' },
-    ],
+    ingredientList: [{ spirit: 'gn' }, { bit: 'bit' }, { sweet: 'sv' }],
     ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'gn-bit-sv' },
+    ingredientAmounts: [
+      { ingred: 'gn', amt: 2, units: 'oz' },
+      { ingred: 'sv', amt: 1, units: 'oz' },
+      { ingred: 'tripsc', amt: 0.25, units: 'oz' },
+      { ingred: 'bit', amt: 2, units: 'dashes' },
+    ],
+    directions: [
+      { a: 'Stir with', b: 'ice' },
+      { a: 'Strain to', b: 'chilled', c: 'coupe' },
+      { note: 'Garnish with', garnish: 'orange', amt: '', units: 'twist' },
+    ],
   },
   {
     name: 'OF',
-    ingredients: [{ spirit: 'rw' }, { bit: 'bit' }, { sweet: 'ss' }],
+    ingredientList: [{ spirit: 'rw' }, { bit: 'bit' }, { sweet: 'ss' }],
     ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'rw-bit-ss' },
+    ingredientAmounts: [
+      { ingred: 'rw', amt: 2, units: 'oz' },
+      { ingred: 'ss', amt: 0.25, units: 'oz' },
+      { ingred: 'bit', amt: 2, units: 'dashes' },
+    ],
+    directions: [
+      { a: 'Stir with', b: 'ice' },
+      { a: 'Strain to', b: 'chilled', c: 'rocks glass' },
+      { note: 'Garnish with', garnish: 'orange', amt: '', units: 'twist' },
+    ],
   },
   {
     name: 'Prkns',
-    ingredients: ['rw', 'sv', 'bene', 'bit'],
-    ingredients: [
+    ingredientList: ['rw', 'sv', 'bene', 'bit'],
+    ingredientList: [
       { spirit: 'rw' },
       { bit: 'bit' },
       { sweet: 'sv' },
@@ -158,35 +234,57 @@ A.drnkNmIngr = [
     ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'rw-bit-sv-bene-|-|' },
   },
   {
-    name: 'Blvdr',
-    ingredients: [{ spirit: 'rw' }, { bit: 'amar' }, { sweet: 'sv' }],
-    ingStrs: {
-      'sprt-bit-swe-hl-fl-cord-misc': 'rw-amar-sv',
-    },
-  },
-  {
     name: 'Mnhtn',
-    ingredients: [{ spirit: 'rw' }, { bit: 'bit' }, { sweet: 'sv' }],
+    ingredientList: [{ spirit: 'rw' }, { bit: 'bit' }, { sweet: 'sv' }],
     ingStrs: {
       'sprt-bit-swe-hl-fl-cord-misc': 'rw-bit-sv',
     },
+    ingredientAmounts: [
+      { ingred: 'rw', amt: 2, units: 'oz' },
+      { ingred: 'sv', amt: 1, units: 'oz' },
+      { ingred: 'bit', amt: 2, units: 'dashes' },
+      { ingred: 'bit', amt: 1, units: 'dash' },
+    ],
+    directions: [
+      { a: 'Stir with', b: 'ice' },
+      { a: 'Strain to', b: 'chilled', c: 'coupe' },
+      {
+        note: 'Garnish with',
+        garnish: 'brandied cherry or lemon',
+        amt: '',
+        units: 'twist',
+      },
+    ],
   },
   {
     name: 'Americano',
     IBA: 'Unforgettable',
-    // ingredients: ['soda water', 'sweet vermouth', 'amaro'],
-    ingredients: ['sweet vermouth', 'amaro'],
+    // ingredientList: ['soda water', 'sweet vermouth', 'amaro'],
+    ingredientList: ['sweet vermouth', 'amaro'],
     ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': '|-amar-sv-|-|-|-soda' },
+    ingredientAmounts: [
+      { ingred: 'amar', amt: 1.5, units: 'oz' },
+      { ingred: 'sv', amt: 1.5, units: 'oz' },
+      { ingred: 'soda', amt: 2.5, units: 'oz' },
+    ],
+    directions: [
+      { a: 'Stir with', b: 'ice' },
+      {
+        note: 'Garnish with',
+        garnish: 'orange',
+        units: 'twist',
+      },
+    ],
   },
   {
     name: 'Aviation',
     IBA: 'Unforgettable',
-    ingredients: ['gin', 'maraschino liqueur', 'lemon juice'],
+    ingredientList: ['gin', 'maraschino liqueur', 'lemon juice'],
     ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'gn-|-|-|-mali-lemj' },
   },
   {
     name: 'Corpse Reviver №2',
-    ingredients: [
+    ingredientList: [
       'gin',
       'triple sec',
       'Cocchi Americano',
@@ -196,48 +294,82 @@ A.drnkNmIngr = [
     ingStrs: {
       'sprt-bit-swe-hl-fl-cord-misc': 'gn-cocchi-|-|-tripsc-lemj-abs',
     },
+    ingredientAmounts: [
+      { ingred: 'gn', amt: 0.75, units: 'oz' },
+      { ingred: 'tripsc', amt: 0.75, units: 'oz' },
+      { ingred: 'cocchi', amt: 0.75, units: 'oz' },
+      { ingred: 'lemj', amt: 0.75, units: 'oz' },
+      { ingred: 'ss', amt: 3, units: 'dashes' },
+      { ingred: 'abs', amt: 2, units: 'dashes' },
+    ],
+    directions: [
+      { a: 'Shake with', b: 'ice' },
+      { a: 'Strain to', b: 'chilled', c: 'coupe' },
+      {
+        note: 'Garnish with',
+        garnish: 'lemon',
+        amt: '',
+        units: 'twist',
+      },
+    ],
   },
   {
     name: 'White Lady',
     IBA: 'Unforgettable',
-    ingredients: ['gin', 'triple sec', 'lemon juice'],
+    ingredientList: ['gin', 'triple sec', 'lemon juice'],
     ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'gn-|-|-|-tripsc-lemj-|' },
   },
   {
     name: 'Gin Fizz / John Collins',
     IBA: 'Unforgettable',
-    ingredients: ['gin', 'lemon juice', 'simple syrup', 'soda water'],
+    ingredientList: ['gin', 'lemon juice', 'simple syrup', 'soda water'],
     ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'gn-|-ss-|-|-lemj-soda' },
   },
   {
     name: 'Jasmine',
-    ingredients: ['gin', 'triple sec', 'amaro', 'lemon juice'],
+    ingredientList: ['gin', 'triple sec', 'amaro', 'lemon juice'],
     ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'gn-amar-|-|-tripsc-lemj' },
   },
   {
     name: 'Gin Gimlet',
-    ingredients: ['gin', 'lime juice', 'simple syrup'],
+    ingredientList: ['gin', 'lime juice', 'simple syrup'],
     ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'gn-|-ss-|-tripsc-limj' },
   },
   {
     name: 'Whiskey Sour',
     IBA: 'Unforgettable',
-    ingredients: ['rye whiskey', 'lemon juice', 'simple syrup'],
+    ingredientList: ['rye whiskey', 'lemon juice', 'simple syrup'],
     ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'rw-|-ss-|-|-lemj' },
   },
   {
     name: 'The Last Word',
-    ingredients: [
+    ingredientList: [
       'gin',
       'lime juice',
       'maraschino liqueur',
       'green chartreuse',
     ],
-    ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'gn-|-ss-gc-mali-limj' },
+    ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'gn-|-|-gc-mali-limj' },
+    ingredientAmounts: [
+      { ingred: 'gn', amt: 0.75, units: 'oz' },
+      { ingred: 'gc', amt: 0.75, units: 'oz' },
+      { ingred: 'mali', amt: 0.75, units: 'oz' },
+      { ingred: 'limj', amt: 0.5, units: 'oz' },
+    ],
+    directions: [
+      { a: 'Shake with', b: 'ice' },
+      { a: 'Strain to', b: 'chilled', c: 'coupe' },
+      {
+        note: 'Optional garnish with',
+        garnish: 'brandied cherry & lime',
+        amt: '',
+        units: 'twist',
+      },
+    ],
   },
   {
     name: 'Vieux Carré',
-    ingredients: [
+    ingredientList: [
       'rye whiskey',
       'cognac',
       'sweet vermouth',
@@ -246,39 +378,57 @@ A.drnkNmIngr = [
       "Peychaud's Bitters",
     ],
     ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'rw-bit-sv-bene-|-|-cog-peych' },
+    ingredientAmounts: [
+      { ingred: 'rw', amt: 1, units: 'oz' },
+      { ingred: 'cog', amt: 1, units: 'oz' },
+      { ingred: 'sv', amt: 1, units: 'oz' },
+      { ingred: 'bene', amt: 0.25, units: 'oz' },
+      { ingred: 'bit', amt: 1, units: 'dash' },
+      { ingred: 'peych', amt: 1, units: 'dash' },
+    ],
+    directions: [
+      { a: 'Stir with', b: 'ice' },
+      { a: 'Strain to', b: 'chilled', c: 'rocks glass' },
+      {
+        note: 'Garnish with',
+        garnish: 'lemon',
+        amt: '',
+        units: 'twist',
+      },
+    ],
   },
   {
     name: 'Moscow Mule',
-    ingredients: ['vodka', 'ginger beer', 'lime juice'],
+    ingredientList: ['vodka', 'ginger beer', 'lime juice'],
     ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'vod-|-|-|-|-limj-gngrbr' },
   },
   {
     name: 'Mojito',
     IBA: 'Contemporary Classic',
-    ingredients: ['rum', 'lime juice', 'simple syrup', 'soda water', 'mint'],
+    ingredientList: ['rum', 'lime juice', 'simple syrup', 'soda water', 'mint'],
     ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'rum-|-ss-|-|-limj-soda-mint' },
   },
   {
     name: 'Daiquiri',
     IBA: '?',
-    ingredients: ['rum', 'lime juice', 'simple syrup'],
+    ingredientList: ['rum', 'lime juice', 'simple syrup'],
     ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'rum-|-ss-|-|-limj' },
   },
   {
     name: 'Mint Julep',
     IBA: 'Contemporary Classic',
-    ingredients: ['bourbon whiskey', 'simple syrup', 'mint'],
+    ingredientList: ['bourbon whiskey', 'simple syrup', 'mint'],
     ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'rw-|-ss-|-|-|-mint' },
   },
   {
     name: 'Margarita',
     IBA: 'Contemporary Classic',
-    ingredients: ['tequila', 'triple sec', 'lime juice'],
+    ingredientList: ['tequila', 'triple sec', 'lime juice'],
     ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'teq-|-|-|-tripsc-limj' },
   },
   {
     name: 'Paloma',
-    ingredients: ['tequila', 'grapefruit juice', 'soda'],
+    ingredientList: ['tequila', 'grapefruit juice', 'soda'],
     ingStrs: { 'sprt-bit-swe-hl-fl-cord-misc': 'teq-|-|-|-|-gj-|-soda' },
   },
 ]
@@ -342,7 +492,7 @@ A.treeData2 = convertObjToNameChildrenTree(A.root)
 
 var getLeaves = function(tree) {
   var leaves = []
-  var values = []
+  // var values = []
   var walk = function(obj, path) {
     path = path || ''
     for (var key in obj) {
@@ -366,7 +516,7 @@ function compareListsLookup(list, listOfObjects) {
   var firstMatch = ''
   list = list.filter(x => x != '').sort()
   for (var j = 0; j < listOfObjects.length; j++) {
-    var list2 = listOfObjects[j].ingredients.sort()
+    var list2 = listOfObjects[j].ingredientList.sort()
     if (list.length === list2.length) {
       if (_.isEqual(list.sort(), list2.sort())) {
         firstMatch = listOfObjects[j].name
@@ -400,6 +550,40 @@ function appendReductionToObjTreeLeaves(obj, depth) {
         { name: match, children: [], class: 'match' },
       ])
       A.matchedNames.push(match)
+    }
+  }
+}
+
+function getIngredAmts(drnkName) {
+  if (drnkName) {
+    // if (drnkName === 'Paper Plane') debugger
+    var arr = Object.values(A.drnkNmIngr).filter(x => x.name === drnkName)
+    // console.log(arr)
+    if (arr[0] && arr[0].ingredientAmounts) {
+      var ingredArr = arr[0].ingredientAmounts.map(x => {
+        return `${x.amt} ${x.units} ${A.lut[x.ingred]}`
+      })
+
+      var directionsArr = arr[0].directions.map(x => {
+        return Object.values(x).join(' ')
+      })
+
+      var titleDiv = `<div class="title-light">${
+        PROD ? A.lut[drnkName] || drnkName : drnkName
+      }</div>`
+      var ingredDiv = '<div class="ingredientAmounts">'
+      ingredDiv += ingredArr.join('<br />')
+      ingredDiv += '</div>'
+
+      var directionsDiv = '<div class="directions">'
+      directionsDiv += directionsArr.join('<br />')
+
+      return titleDiv + ingredDiv + directionsDiv
+    } else {
+      var titleDiv = `<div class="title-light">${
+        PROD ? A.lut[drnkName] || drnkName : drnkName
+      }</div>`
+      return titleDiv
     }
   }
 }
