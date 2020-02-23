@@ -256,7 +256,25 @@ path.gngrbr {
   font-weight: 700;
   font-size: 16px;
   border: 1px solid #aaa;
-  background: #eee;
+  background: #f8f8f8;
+  width: 300px;
+  vertical-align: top; 
+}
+
+foreignObject.leaf div.node-text div.title {
+  border: none;
+  background: #444;
+  color: #fff
+}
+
+foreignObject.leaf div.node-text div.title-light {
+  border: none;
+  background: #ccc;
+  color: #000
+}
+
+foreignObject.leaf div.node-text {
+  min-height: 50px;
 }
 
 circle.ing-node {
@@ -321,5 +339,17 @@ div.legend-text {
 
 
 .node-text {
-  opacity: 0.9;
+  opacity: 1.0;
 }
+
+div.ingredientAmounts,
+div.directions {
+  font-weight: 400;
+  font-size: 11px;
+  border: 0px solid gray;
+  text-align: left;
+  margin: 3px;
+  display: inline-block;
+  width: 140px;
+}
+

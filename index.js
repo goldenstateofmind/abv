@@ -22,7 +22,7 @@ var nodeEnter, linkUpdate, linkEnter, linkExit
 // set the dimensions and margins of the diagram
 var margin = { top: 20, right: 90, bottom: 90, left: 20 },
   width = 2000 - margin.left - margin.right,
-  height = 2000 - margin.top - margin.bottom
+  height = 2500 - margin.top - margin.bottom
 
 // declares a tree layout and assigns the size
 // var d3tree = d3.tree().size([width, height])
@@ -133,13 +133,19 @@ function update(sourceHierarchy) {
       }
       return 10
     })
-    .attr('y', d => (d.children ? -22 : -10))
+    // .attr('y', d => (d.children ? -22 : -10))
+    .attr('y', d => (d.children ? -22 : -26))
     .attr('width', 120)
     .attr('height', 20)
     .append('xhtml:div')
     .attr('class', 'node-text')
     .html(d => {
       if (d.data.name != '|') {
+        var ingredAmts = getIngredAmts(d.data.name)
+        // console.log(d.data)
+        if (ingredAmts) {
+          return ingredAmts
+        }
         if (PROD) {
           return A.lut[d.data.name] || d.data.name || ''
         }
@@ -147,6 +153,9 @@ function update(sourceHierarchy) {
       }
       return ''
     })
+  // .raise()
+
+  d3.selectAll('g.node.leaf').raise()
 
   // UPDATE
   var nodeUpdate = nodeEnter.merge(node)
@@ -366,7 +375,7 @@ function classifyPathsBelowX(x) {
     return x === innerText
   })
 
-  var nodesSelection = d3.selectAll('.node') // 146
+  // var nodesSelection = d3.selectAll('.node') // 146
 
   d3.selectAll(matchingTextNodes).attr('test', function(d) {
     // select _all_ paths, class them based on their link
@@ -438,7 +447,7 @@ function createLegend() {
     })
 }
 
-createLegend()
+// createLegend()
 
 function snapPx(commaSpaceString) {
   var a = commaSpaceString.replace(/\s\s+/g, ' ') // replace multiple whitespace with one
